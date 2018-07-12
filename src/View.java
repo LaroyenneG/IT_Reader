@@ -7,7 +7,7 @@ public class View extends JFrame {
     private JPanel panel;
 
     private JLabel screen;
-    private JButton messure;
+    private JButton copy;
 
     private JCheckBox auto;
 
@@ -24,38 +24,36 @@ public class View extends JFrame {
 
         gridLayout = new GridLayout(0, 1);
 
-        statusInfo = new JLabel("Collé dans le prespapier !");
+        panel = new JPanel();
+        panel.setLayout(gridLayout);
+
+        statusInfo = new JLabel("");
         statusInfo.setHorizontalAlignment(SwingConstants.CENTER);
         statusInfo.setVerticalAlignment(SwingConstants.CENTER);
 
-        screen = new JLabel("152.3 kg");
+        screen = new JLabel("");
         screen.setHorizontalAlignment(SwingConstants.CENTER);
         screen.setVerticalAlignment(SwingConstants.CENTER);
 
-        screen.setFont(new Font("Arial", Font.BOLD, 20));
+        screen.setFont(new Font("Arial", Font.BOLD, 25));
         screen.setForeground(Color.CYAN);
         screen.setBackground(Color.BLACK);
         screen.setOpaque(true);
 
-        messure = new JButton("Mesurer");
-        messure.setHorizontalAlignment(SwingConstants.CENTER);
-        messure.setVerticalAlignment(SwingConstants.CENTER);
+        copy = new JButton("Copier dans le presse-papier");
+        copy.setHorizontalAlignment(SwingConstants.CENTER);
+        copy.setVerticalAlignment(SwingConstants.CENTER);
 
         auto = new JCheckBox("Mode automatique");
         auto.setHorizontalAlignment(SwingConstants.CENTER);
         auto.setVerticalAlignment(SwingConstants.CENTER);
         auto.setOpaque(false);
 
-        panel = new JPanel();
-
-        panel.setLayout(gridLayout);
-
 
         panel.add(screen);
         panel.add(statusInfo);
         panel.add(auto);
-        panel.add(messure);
-
+        panel.add(copy);
         panel.setOpaque(true);
 
         menu = new JMenuBar();
@@ -72,6 +70,10 @@ public class View extends JFrame {
         color();
     }
 
+
+    public void setBackGroundColor(Color color) {
+        backGroundColor = color;
+    }
 
     public void color() {
 
