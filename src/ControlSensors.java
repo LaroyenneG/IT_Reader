@@ -8,4 +8,8 @@ public class ControlSensors extends Controller {
         threadReadSensors = new ThreadReadSensors(model, view, this);
         threadReadSensors.start();
     }
+
+    public void stop() {
+        threadReadSensors.interrupt();
+    }
 }
