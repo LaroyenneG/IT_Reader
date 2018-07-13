@@ -1,7 +1,7 @@
 public abstract class Controller {
 
-    private Model model;
-    private View view;
+    Model model;
+    View view;
 
     public Controller(Model model, View view) {
 

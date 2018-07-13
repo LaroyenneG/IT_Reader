@@ -3,28 +3,46 @@ public class Model {
     public static final int SIZE = 1000;
 
     private int cursor;
-    private double[] messure;
+    private double[] measures;
 
     public Model() {
-        messure = new double[SIZE];
+        measures = new double[SIZE];
         cursor = 0;
     }
 
-    public void setNewMesure(int m) {
+    private void setNewMeasure(double m) {
 
         if (cursor < SIZE) {
-            messure[cursor] = m;
+            measures[cursor] = m;
+            cursor++;
         }
     }
 
-    public double getMessure() {
+    public synchronized void setNewMeasures(double[] measures) {
+
+        for (int i = 0; i < measures.length; i++) {
+            setNewMeasure(measures[i]);
+        }
+    }
+
+
+    public synchronized void reset() {
+        cursor = 0;
+    }
+
+    public synchronized double getMessure() throws NoMeasureException {
+
+
+        if (cursor <= 0) {
+            throw new NoMeasureException("Any measure in memory");
+        }
 
         double m = 0;
 
-        for (int i = 0; i < SIZE; i++) {
-            m += messure[i];
+        for (int i = 0; i < cursor; i++) {
+            m += measures[i];
         }
 
-        return m / SIZE;
+        return m / cursor;
     }
 }
