@@ -4,6 +4,7 @@ public class Model {
 
     private int cursor;
     private double[] measures;
+    private double measure;
 
     public Model() {
         measures = new double[SIZE];
@@ -26,11 +27,15 @@ public class Model {
     }
 
 
-    public synchronized void reset() {
+    private synchronized void reset() {
         cursor = 0;
     }
 
-    public synchronized double getMessure() throws NoMeasureException {
+    public synchronized double getMeasure() {
+        return measure;
+    }
+
+    public synchronized void compute() throws NoMeasureException {
 
 
         if (cursor <= 0) {
@@ -43,6 +48,8 @@ public class Model {
             m += measures[i];
         }
 
-        return m / cursor;
+        measure = m / cursor;
+
+        reset();
     }
 }

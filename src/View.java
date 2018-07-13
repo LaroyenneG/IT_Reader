@@ -4,6 +4,12 @@ import java.awt.event.ActionListener;
 
 public class View extends JFrame {
 
+    public static final String CODE_HELP = "HELP";
+    public static final String CODE_CONNEXION = "CONNEXION";
+    public static final String CODE_CREDIT = "CREDIT";
+    public static final String CODE_EXIT = "EXIT";
+
+
     private JMenuBar menu;
 
     private JMenuItem help;
@@ -68,12 +74,20 @@ public class View extends JFrame {
         panel.add(copy);
         panel.setOpaque(true);
 
+
         menu = new JMenuBar();
 
         help = new JMenuItem("Help");
+        help.setActionCommand(CODE_HELP);
+
         exit = new JMenuItem("Exit");
+        exit.setActionCommand(CODE_EXIT);
+
         credit = new JMenuItem("Credit");
+        credit.setActionCommand(CODE_CREDIT);
+
         connexion = new JMenuItem("Connexion");
+        connexion.setActionCommand(CODE_CONNEXION);
 
         options = new JMenu("Options");
         scale = new JMenu("Scale");
@@ -161,6 +175,10 @@ public class View extends JFrame {
 
     public void setMenuController(ActionListener listener) {
 
+        connexion.addActionListener(listener);
+        exit.addActionListener(listener);
+        credit.addActionListener(listener);
+        help.addActionListener(listener);
     }
 
     public void setBottomController(ActionListener listener) {

@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+
 public abstract class Controller {
 
     Model model;
@@ -7,5 +10,11 @@ public abstract class Controller {
 
         this.model = model;
         this.view = view;
+    }
+
+
+    public void sendToClipboard() {
+        StringSelection selection = new StringSelection(String.valueOf(model.getMeasure()));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }
 }

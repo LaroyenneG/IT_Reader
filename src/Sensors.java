@@ -15,7 +15,16 @@ public class Sensors {
         return instance;
     }
 
+    public void connect() {
+
+    }
+
+
+    public boolean isConnect() {
+        return true;
+    }
+
     public double readValue() {
-        return Math.random();
+        return Math.random() * 1000;
     }
 }
