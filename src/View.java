@@ -77,10 +77,10 @@ public class View extends JFrame {
 
         menu = new JMenuBar();
 
-        help = new JMenuItem("Help");
+        help = new JMenuItem("Aide");
         help.setActionCommand(CODE_HELP);
 
-        exit = new JMenuItem("Exit");
+        exit = new JMenuItem("Quiter");
         exit.setActionCommand(CODE_EXIT);
 
         credit = new JMenuItem("Credit");
@@ -90,7 +90,7 @@ public class View extends JFrame {
         connexion.setActionCommand(CODE_CONNEXION);
 
         options = new JMenu("Options");
-        scale = new JMenu("Scale");
+        scale = new JMenu("Balance");
 
         scale.add(connexion);
 
@@ -170,6 +170,7 @@ public class View extends JFrame {
 
         screen.setText(String.valueOf(m));
     }
+
 
     /* Controllers */
 

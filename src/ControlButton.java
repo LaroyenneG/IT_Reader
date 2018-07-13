@@ -13,5 +13,6 @@ public class ControlButton extends Controller implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
 
         sendToClipboard();
+        checkClipBoard(model.getMeasure());
     }
 }

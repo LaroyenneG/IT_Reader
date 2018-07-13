@@ -2,12 +2,14 @@ public class ThreadReadSensors extends Thread {
 
     private Model model;
     private View view;
+    private Controller controller;
 
-    public ThreadReadSensors(Model model, View view) {
+    public ThreadReadSensors(Model model, View view, Controller controller) {
         super();
 
         this.model = model;
         this.view = view;
+        this.controller = controller;
     }
 
     @Override
@@ -37,6 +39,12 @@ public class ThreadReadSensors extends Thread {
                 view.displayMeasure(model.getMeasure());
             } catch (NoMeasureException e) {
                 e.printStackTrace();
+            }
+
+            if (model.getAuto()) {
+                controller.sendToClipboard();
+            } else {
+                controller.checkClipBoard(model.getMeasure());
             }
 
             try {

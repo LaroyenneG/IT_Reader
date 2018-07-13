@@ -5,7 +5,7 @@ public class ControlSensors extends Controller {
     public ControlSensors(Model model, View view) {
         super(model, view);
 
-        threadReadSensors = new ThreadReadSensors(model, view);
+        threadReadSensors = new ThreadReadSensors(model, view, this);
         threadReadSensors.start();
     }
 }
