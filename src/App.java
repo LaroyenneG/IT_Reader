@@ -13,8 +13,6 @@ public class App {
                 Model model = new Model();
                 View view = new View();
 
-                view.displayMeasure(115.02);
-
                 ControlGroup controlGroup = new ControlGroup(model, view);
             }
         });
