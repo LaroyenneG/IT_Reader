@@ -1,8 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 public class View extends JFrame {
+
+    public static final String UNIT = "kg";
 
     public static final String CODE_HELP = "HELP";
     public static final String CODE_CONNEXION = "CONNEXION";
@@ -167,26 +170,15 @@ public class View extends JFrame {
 
     public void displayMeasure(double m) {
 
-        screen.setText(String.valueOf(m));
-    }
+        final DecimalFormat df = new DecimalFormat("#####.#");
 
+        StringBuilder measure = new StringBuilder();
 
-    /* Controllers */
+        measure.append(df.format(m));
+        measure.append(' ');
+        measure.append(UNIT);
 
-    public void setMenuController(ActionListener listener) {
-
-        connexion.addActionListener(listener);
-        exit.addActionListener(listener);
-        credit.addActionListener(listener);
-        help.addActionListener(listener);
-    }
-
-    public void setBottomController(ActionListener listener) {
-        copy.addActionListener(listener);
-    }
-
-    public void setCheckBoxController(ActionListener listener) {
-        auto.addActionListener(listener);
+        screen.setText(new String(measure));
     }
 
     public void lock() {
@@ -211,6 +203,24 @@ public class View extends JFrame {
 
         JDialog dialog = new JDialog();
 
-        JOptionPane.showMessageDialog(dialog, "Noubliez pas de tarer la balance", "Rappel tarage", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(dialog, "N'oubliez pas de tarer la balance", "Rappel tarage", JOptionPane.WARNING_MESSAGE);
+    }
+
+    /* Controllers */
+
+    public void setMenuController(ActionListener listener) {
+
+        connexion.addActionListener(listener);
+        exit.addActionListener(listener);
+        credit.addActionListener(listener);
+        help.addActionListener(listener);
+    }
+
+    public void setBottomController(ActionListener listener) {
+        copy.addActionListener(listener);
+    }
+
+    public void setCheckBoxController(ActionListener listener) {
+        auto.addActionListener(listener);
     }
 }
