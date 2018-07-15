@@ -7,10 +7,8 @@ public class ControlCheckBox extends Controller implements ActionListener {
     public ControlCheckBox(Model model, View view) {
         super(model, view);
 
-
         view.setCheckBoxController(this);
     }
-
 
 
     @Override

@@ -10,16 +10,21 @@ import java.util.List;
 public class Sensors {
 
     private static Sensors instance = null;
+
     private SerialPort serialPort;
     private String portName;
     private CommPortIdentifier portID;
     private BufferedReader input;
 
+    private boolean connect;
+
     private Sensors() {
+
         portName = "";
         serialPort = null;
         portID = null;
         input = null;
+        connect = false;
     }
 
     public static Sensors getInstance() {
@@ -39,24 +44,32 @@ public class Sensors {
 
         String[] ports = null;
 
-        Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+        if (!connect) {
 
-        List<String> list = new ArrayList<>();
 
-        while (enumeration.hasMoreElements()) {
-            list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
-        }
+            Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 
-        ports = new String[list.size()];
+            List<String> list = new ArrayList<>();
 
-        for (int i = 0; i < ports.length; i++) {
-            ports[i] = list.get(i);
+            while (enumeration.hasMoreElements()) {
+                list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
+            }
+
+            ports = new String[list.size()];
+
+            for (int i = 0; i < ports.length; i++) {
+                ports[i] = list.get(i);
+            }
         }
 
         return ports;
     }
 
-    public synchronized void connect() {
+    public synchronized void connect() throws PortInUseException {
+
+        if (connect) {
+            return;
+        }
 
         try {
 
@@ -68,35 +81,13 @@ public class Sensors {
 
             input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
-        } catch (PortInUseException | UnsupportedCommOperationException | IOException | NoSuchPortException e) {
+            connect = true;
+
+            notifyAll();
+
+        } catch (UnsupportedCommOperationException | IOException | NoSuchPortException e) {
             e.printStackTrace();
         }
-
-	    /*
-		Enumeration ports = CommPortIdentifier.getPortIdentifiers();
-		int i = 1;
-		while (ports.hasMoreElements()) {
-			CommPortIdentifier port = (CommPortIdentifier) ports.nextElement();
-			System.out.println("Port n°" + i++);
-			System.out.println("\tNom\t:\t" + port.getName());
-			String type = null;
-			if (port.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-				type = "Serie";
-			} else {
-				type = "Parallèle";
-			}
-			System.out.println("\tType\t:\t" + type);
-			String etat = null;
-			if (port.isCurrentlyOwned()) {
-				etat = "Possédé par " + port.getCurrentOwner();
-			} else {
-				etat = "Libre";
-			}
-			System.out.println("\tEtat\t:\t" + etat + "\n");
-		}
-
-*/
-        notifyAll();
     }
 
     public synchronized void waitIsConnect() {
@@ -109,6 +100,16 @@ public class Sensors {
     }
 
     public double readValue() {
+        try {
+            System.out.println(input.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return Math.random() * 1000;
+    }
+
+    public boolean isConnect() {
+
+        return connect;
     }
 }

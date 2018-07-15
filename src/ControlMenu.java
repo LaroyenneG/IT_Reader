@@ -1,3 +1,5 @@
+import gnu.io.PortInUseException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,10 +27,12 @@ public class ControlMenu extends Controller implements ActionListener {
                 break;
 
             case View.CODE_CREDIT:
+
                 JOptionPane.showMessageDialog(dialog, "Programme réalisé par :\nGuillaume LAROYENNE\nle 13/07/2018", "Credit", JOptionPane.INFORMATION_MESSAGE);
                 break;
 
             case View.CODE_HELP:
+
                 JOptionPane.showMessageDialog(dialog, "Ce programme permet de lire le poids mesuré par une balance du type IT100.\n" +
                         "Le poids mesuré sera stocké dans le presse-papier de votre ordinateur.\n\n" +
                         "Pour utiliser le programme :\n" +
@@ -50,8 +54,12 @@ public class ControlMenu extends Controller implements ActionListener {
                             null, values, "Titan");
 
                     if (result != null) {
-                        sensors.setPortName(result);
-                        sensors.connect();
+                        try {
+                            sensors.setPortName(result);
+                            sensors.connect();
+                        } catch (PortInUseException e) {
+                            JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
