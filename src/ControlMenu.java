@@ -42,7 +42,20 @@ public class ControlMenu extends Controller implements ActionListener {
 
                 Sensors sensors = Sensors.getInstance();
 
-                sensors.connect();
+
+                String[] values = sensors.listPortIdentifiers();
+
+                if (values != null) {
+                    String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
+                            null, values, "Titan");
+
+                    if (result != null) {
+                        sensors.setPortName(result);
+                        sensors.connect();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
 
                 break;
 

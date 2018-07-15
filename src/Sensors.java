@@ -1,56 +1,83 @@
+import gnu.io.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-
 public class Sensors {
 
-	private SerialPort serialPort;
-	private String portID;
+    private static Sensors instance = null;
+    private SerialPort serialPort;
+    private String portName;
+    private CommPortIdentifier portID;
+    private BufferedReader input;
 
-	private static Sensors instance = null;
+    private Sensors() {
+        portName = "";
+        serialPort = null;
+        portID = null;
+        input = null;
+    }
 
-	private Sensors() {
-		portID = "";
-	}
+    public static Sensors getInstance() {
 
-	public static Sensors getInstance() {
+        if (instance == null) {
+            instance = new Sensors();
+        }
 
-		if (instance == null) {
-			instance = new Sensors();
-		}
+        return instance;
+    }
 
-		return instance;
-	}
+    public synchronized void setPortName(String name) {
+        portName = name;
+    }
 
-	public String[] listPortIdentifiers() {
+    public synchronized String[] listPortIdentifiers() {
 
-		String[] ports = null;
+        String[] ports = null;
 
-		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+        try {
 
-		if (enumeration != null) {
 
-			List<String> list = new ArrayList<>();
+            Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 
-			while (enumeration.hasMoreElements()) {
-				list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
-			}
+            List<String> list = new ArrayList<>();
 
-			ports = new String[list.size()];
+            while (enumeration.hasMoreElements()) {
+                list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
+            }
 
-			for (int i = 0; i < ports.length; i++) {
-				ports[i] = list.get(i);
-			}
-		}
+            ports = new String[list.size()];
 
-		return ports;
-	}
+            for (int i = 0; i < ports.length; i++) {
+                ports[i] = list.get(i);
+            }
+        } catch (UnsatisfiedLinkError ignored) {
+        }
 
-	public synchronized void connect() {
+        return ports;
+    }
 
+    public synchronized void connect() {
+
+        try {
+
+            portID = CommPortIdentifier.getPortIdentifier(portName);
+
+            serialPort = (SerialPort) portID.open("Envoi", 2000);
+
+            serialPort.setSerialPortParams(1200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+
+            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+
+        } catch (PortInUseException | UnsupportedCommOperationException | IOException | NoSuchPortException e) {
+            e.printStackTrace();
+        }
+
+	    /*
 		Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 		int i = 1;
 		while (ports.hasMoreElements()) {
@@ -73,19 +100,20 @@ public class Sensors {
 			System.out.println("\tEtat\t:\t" + etat + "\n");
 		}
 
-		notifyAll();
-	}
+*/
+        notifyAll();
+    }
 
-	public synchronized void waitIsConnect() {
+    public synchronized void waitIsConnect() {
 
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public double readValue() {
-		return Math.random() * 1000;
-	}
+    public double readValue() {
+        return Math.random() * 1000;
+    }
 }
