@@ -39,23 +39,18 @@ public class Sensors {
 
         String[] ports = null;
 
-        try {
+        Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 
+        List<String> list = new ArrayList<>();
 
-            Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+        while (enumeration.hasMoreElements()) {
+            list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
+        }
 
-            List<String> list = new ArrayList<>();
+        ports = new String[list.size()];
 
-            while (enumeration.hasMoreElements()) {
-                list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
-            }
-
-            ports = new String[list.size()];
-
-            for (int i = 0; i < ports.length; i++) {
-                ports[i] = list.get(i);
-            }
-        } catch (UnsatisfiedLinkError ignored) {
+        for (int i = 0; i < ports.length; i++) {
+            ports[i] = list.get(i);
         }
 
         return ports;
