@@ -44,8 +44,6 @@ public class ControlMenu extends Controller implements ActionListener {
 
                 sensors.connect();
 
-                notifyAll();
-
                 break;
 
             default:

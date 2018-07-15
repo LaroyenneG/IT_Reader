@@ -20,12 +20,10 @@ public class ControlCheckBox extends Controller implements ActionListener {
             view.changeBlue();
             view.displayInfo("Mode automatique activé");
             view.disableBottom();
-            model.setAuto(true);
         } else {
             view.changeWhite();
             view.displayInfo("");
             view.enableBottom();
-            model.setAuto(false);
         }
     }
 }

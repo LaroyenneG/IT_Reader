@@ -5,12 +5,10 @@ public class Model {
     private int cursor;
     private double[] measures;
     private double measure;
-    private boolean auto;
 
     public Model() {
         measures = new double[SIZE];
         cursor = 0;
-        auto = false;
     }
 
     private void setNewMeasure(double m) {
@@ -53,13 +51,5 @@ public class Model {
         measure = m / cursor;
 
         reset();
-    }
-
-    public boolean getAuto() {
-        return auto;
-    }
-
-    public void setAuto(boolean b) {
-        auto = b;
     }
 }

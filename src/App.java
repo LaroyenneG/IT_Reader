@@ -2,11 +2,7 @@ import javax.swing.*;
 
 public class App {
 
-    public static final String COPY_RIGTH = "Guillaume LAROYENNE 2018";
-
     public static void main(String[] args) {
-
-        System.out.println(COPY_RIGTH);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -14,6 +10,9 @@ public class App {
                 View view = new View();
 
                 ControlGroup controlGroup = new ControlGroup(model, view);
+
+                view.lock();
+                view.askControl();
             }
         });
     }

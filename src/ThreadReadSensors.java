@@ -5,6 +5,7 @@ public class ThreadReadSensors extends Thread {
     private Controller controller;
 
     public ThreadReadSensors(Model model, View view, Controller controller) {
+
         super();
 
         this.model = model;
@@ -17,14 +18,11 @@ public class ThreadReadSensors extends Thread {
 
         Sensors sensors = Sensors.getInstance();
 
+        sensors.waitIsConnect();
+
+        view.unlock();
+
         while (!isInterrupted()) {
-            while (!sensors.isConnect()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
 
             double[] measure = new double[Model.SIZE];
 
@@ -41,7 +39,7 @@ public class ThreadReadSensors extends Thread {
                 e.printStackTrace();
             }
 
-            if (model.getAuto()) {
+            if (view.autoValue()) {
                 controller.sendToClipboard();
             } else {
                 controller.checkClipBoard(model.getMeasure());

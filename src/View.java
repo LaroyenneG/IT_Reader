@@ -9,6 +9,7 @@ public class View extends JFrame {
     public static final String CODE_CREDIT = "CREDIT";
     public static final String CODE_EXIT = "EXIT";
 
+    private JPanel panel;
 
     private JMenuBar menu;
 
@@ -19,8 +20,6 @@ public class View extends JFrame {
 
     private JMenu options;
     private JMenu scale;
-
-    private JPanel panel;
 
     private JLabel screen;
     private JButton copy;
@@ -33,21 +32,14 @@ public class View extends JFrame {
 
     private Color backGroundColor;
 
-
     public View() {
 
         backGroundColor = Color.WHITE;
-
-        gridLayout = new GridLayout(0, 1);
-
-        panel = new JPanel();
-        panel.setLayout(gridLayout);
 
         statusInfo = new JLabel("");
         statusInfo.setHorizontalAlignment(SwingConstants.CENTER);
         statusInfo.setVerticalAlignment(SwingConstants.BOTTOM);
         statusInfo.setFont(new Font("Arial", Font.ITALIC, 15));
-
 
         screen = new JLabel("");
         screen.setHorizontalAlignment(SwingConstants.CENTER);
@@ -67,15 +59,33 @@ public class View extends JFrame {
         auto.setVerticalAlignment(SwingConstants.CENTER);
         auto.setOpaque(false);
 
+        gridLayout = new GridLayout(0, 1);
 
+        panel = new JPanel();
+        panel.setLayout(gridLayout);
         panel.add(screen);
         panel.add(statusInfo);
         panel.add(auto);
         panel.add(copy);
         panel.setOpaque(true);
 
-
         menu = new JMenuBar();
+        buildMenu();
+
+        setDefaultCloseOperation(3);
+
+        setSize(250, 300);
+        setResizable(false);
+        setVisible(true);
+
+        setJMenuBar(menu);
+        setContentPane(panel);
+        setTitle("Scale connector");
+
+        color();
+    }
+
+    public void buildMenu() {
 
         help = new JMenuItem("Aide");
         help.setActionCommand(CODE_HELP);
@@ -100,27 +110,12 @@ public class View extends JFrame {
 
         menu.add(options);
         menu.add(scale);
-
-
-        setDefaultCloseOperation(3);
-
-        setSize(250, 300);
-        setResizable(false);
-        setVisible(true);
-
-        setJMenuBar(menu);
-        setContentPane(panel);
-
-        color();
     }
+
 
     public void displayInfo(String msg) {
 
         statusInfo.setText(msg);
-    }
-
-    public void setBackGroundColor(Color color) {
-        backGroundColor = color;
     }
 
     private void color() {
@@ -150,6 +145,10 @@ public class View extends JFrame {
         color();
     }
 
+    public void changeGray() {
+        backGroundColor = Color.GRAY;
+        color();
+    }
 
     public void disableBottom() {
 
@@ -188,5 +187,30 @@ public class View extends JFrame {
 
     public void setCheckBoxController(ActionListener listener) {
         auto.addActionListener(listener);
+    }
+
+    public void lock() {
+
+        copy.setEnabled(false);
+        auto.setEnabled(false);
+        panel.setFocusable(false);
+
+        changeGray();
+    }
+
+    public void unlock() {
+
+        copy.setEnabled(true);
+        auto.setEnabled(true);
+        panel.setFocusable(true);
+
+        changeWhite();
+    }
+
+    public void askControl() {
+
+        JDialog dialog = new JDialog();
+
+        JOptionPane.showMessageDialog(dialog, "Noubliez pas de tarer la balance", "Rappel tarage", JOptionPane.WARNING_MESSAGE);
     }
 }

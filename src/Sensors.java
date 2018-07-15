@@ -1,13 +1,11 @@
-import gnu.io.CommPortIdentifier;
-
-import java.util.Enumeration;
-
 public class Sensors {
 
     private static Sensors instance = null;
+    private boolean connect;
 
     private Sensors() {
 
+        connect = false;
     }
 
     public static Sensors getInstance() {
@@ -19,8 +17,8 @@ public class Sensors {
         return instance;
     }
 
-    public void connect() {
-
+    public synchronized void connect() {
+/*
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
         int i = 1;
         while (ports.hasMoreElements()) {
@@ -36,11 +34,20 @@ public class Sensors {
             else etat = "Libre";
             System.out.println("\tEtat\t:\t" + etat + "\n");
         }
+
+  */
+        connect = true;
+        notifyAll();
     }
 
 
-    public boolean isConnect() {
-        return true;
+    public synchronized void waitIsConnect() {
+
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public double readValue() {
