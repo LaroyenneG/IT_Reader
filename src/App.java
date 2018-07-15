@@ -6,6 +6,7 @@ public class App {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+
                 Model model = new Model();
                 View view = new View();
 
