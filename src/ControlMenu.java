@@ -66,6 +66,8 @@ public class ControlMenu extends Controller implements ActionListener {
 
             case View.CODE_EXIT:
 
+                Sensors.getInstance().close();
+
                 System.exit(0);
                 break;
 

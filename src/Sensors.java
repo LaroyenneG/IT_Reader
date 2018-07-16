@@ -131,4 +131,20 @@ public class Sensors {
             notifyAll();
         }
     }
+
+    public void close() {
+
+        if (input != null) {
+            try {
+                input.close();
+                connect = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isConnect() {
+        return connect;
+    }
 }

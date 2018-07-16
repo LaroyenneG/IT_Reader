@@ -18,11 +18,13 @@ public class ThreadReadSensors extends Thread {
 
         Sensors sensors = Sensors.getInstance();
 
-        sensors.waitIsConnect();
-
-        view.unlock();
-
         while (!isInterrupted()) {
+
+            if (!sensors.isConnect()) {
+                view.lock();
+                sensors.waitIsConnect();
+                view.unlock();
+            }
 
             double[] measure = new double[Model.SIZE];
 
