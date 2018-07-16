@@ -65,29 +65,39 @@ public class Sensors {
         return ports;
     }
 
-    public synchronized void connect() throws PortInUseException {
+    public synchronized int connect() {
 
         if (connect) {
-            return;
+            return -1;
         }
 
         try {
 
             portID = CommPortIdentifier.getPortIdentifier(portName);
 
-            serialPort = (SerialPort) portID.open("Envoi", 2000);
+            Object object = portID.open("scale", 2000);
 
-            serialPort.setSerialPortParams(1200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            if (object instanceof SerialPort) {
 
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+                serialPort = (SerialPort) portID.open("scale", 2000);
 
-            connect = true;
+                serialPort.setSerialPortParams(1200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
-            notifyAll();
+                input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+
+                setConnect(true);
+
+            } else {
+                return -2;
+            }
 
         } catch (UnsupportedCommOperationException | IOException | NoSuchPortException e) {
-            e.printStackTrace();
+            return -3;
+        } catch (PortInUseException e) {
+            return -4;
         }
+
+        return 0;
     }
 
     public synchronized void waitIsConnect() {
@@ -100,16 +110,25 @@ public class Sensors {
     }
 
     public double readValue() {
+
         try {
-            System.out.println(input.readLine());
+
+            String data = input.readLine();
+
+            System.out.println(data);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            return 0.0;
         }
+
         return Math.random() * 1000;
     }
 
-    public boolean isConnect() {
+    public void setConnect(boolean b) {
 
-        return connect;
+        connect = b;
+        if (connect) {
+            notifyAll();
+        }
     }
 }

@@ -1,5 +1,3 @@
-import gnu.io.PortInUseException;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +11,51 @@ public class ControlMenu extends Controller implements ActionListener {
 
         dialog = new JDialog();
         view.setMenuController(this);
+    }
+
+    private void connection() {
+        Sensors sensors = Sensors.getInstance();
+
+        String[] values = sensors.listPortIdentifiers();
+
+        if (values != null && values.length > 1) {
+
+            String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
+                    null, values, "Titan");
+
+            if (result != null) {
+
+                sensors.setPortName(result);
+
+                switch (sensors.connect()) {
+
+                    case 0:
+                        JOptionPane.showMessageDialog(dialog, "Connection réalisé", "OK", JOptionPane.INFORMATION_MESSAGE);
+                        break;
+
+                    case -1:
+                        JOptionPane.showMessageDialog(dialog, "Déjà connecté", "Attention", JOptionPane.WARNING_MESSAGE);
+                        break;
+
+                    case -2:
+                        JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    case -3:
+                        JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#007", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    case -4:
+                        JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
@@ -44,26 +87,7 @@ public class ControlMenu extends Controller implements ActionListener {
 
             case View.CODE_CONNEXION:
 
-                Sensors sensors = Sensors.getInstance();
-
-
-                String[] values = sensors.listPortIdentifiers();
-
-                if (values != null) {
-                    String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
-                            null, values, "Titan");
-
-                    if (result != null) {
-                        try {
-                            sensors.setPortName(result);
-                            sensors.connect();
-                        } catch (PortInUseException e) {
-                            JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
-                }
+                connection();
 
                 break;
 
