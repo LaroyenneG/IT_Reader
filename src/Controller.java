@@ -31,7 +31,9 @@ public abstract class Controller {
 
             try {
                 text = (String) transferable.getTransferData(flavor);
-            } catch (UnsupportedFlavorException | IOException ignored) {
+            } catch (UnsupportedFlavorException ignored) {
+                text = "0";
+            } catch (IOException ignored) {
                 text = "0";
             }
 

@@ -49,7 +49,7 @@ public class Sensors {
 
             Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 
-            List<String> list = new ArrayList<>();
+            List<String> list = new ArrayList<String>();
 
             while (enumeration.hasMoreElements()) {
                 list.add(((CommPortIdentifier) enumeration.nextElement()).getName());
@@ -85,7 +85,11 @@ public class Sensors {
 
             notifyAll();
 
-        } catch (UnsupportedCommOperationException | IOException | NoSuchPortException e) {
+        } catch (UnsupportedCommOperationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchPortException e) {
             e.printStackTrace();
         }
     }
