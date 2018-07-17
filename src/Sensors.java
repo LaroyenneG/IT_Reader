@@ -121,9 +121,17 @@ public class Sensors {
 
         try {
 
+            System.out.println("===========================================================");
+
             String data = input.readLine();
 
             System.out.println(data);
+
+            System.out.println(input);
+
+
+            System.out.println("===========================================================");
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -144,10 +152,11 @@ public class Sensors {
 
     public void disconnect() {
 
-        if (input != null) {
+        if (input != null && serialPort != null) {
+            connect = false;
             try {
                 input.close();
-                connect = false;
+                serialPort.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
