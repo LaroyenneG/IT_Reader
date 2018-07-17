@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -39,6 +40,7 @@ public abstract class Controller {
             try {
                 value = Double.parseDouble(text);
             } catch (NumberFormatException e) {
+                e.printStackTrace();
                 value = 0.0;
             }
 
@@ -57,5 +59,19 @@ public abstract class Controller {
     public void sendToClipboard() {
         StringSelection selection = new StringSelection(String.valueOf(model.getMeasure()));
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+    }
+
+
+    public void errorReading(String portName) {
+
+        Sensors sensors = Sensors.getInstance();
+
+        sensors.disconnect();
+
+        JDialog dialog = new JDialog();
+
+        JOptionPane.showMessageDialog(dialog, "Erreur de communication avec le port : " + portName + "\nDéconnexion automatique activée", "Erreur #001", JOptionPane.ERROR_MESSAGE);
+
+        view.lock();
     }
 }

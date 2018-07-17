@@ -20,7 +20,7 @@ public class ControlMenu extends Controller implements ActionListener {
 
             String[] values = sensors.listPortIdentifiers();
 
-            if (values != null && values.length > 1) {
+            if (values != null && values.length >= 1) {
 
                 String result = (String) JOptionPane.showInputDialog(dialog, "Choisez un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
                         null, values, "");
@@ -40,11 +40,11 @@ public class ControlMenu extends Controller implements ActionListener {
                             break;
 
                         case -2:
-                            JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur #002", JOptionPane.ERROR_MESSAGE);
                             break;
 
                         case -3:
-                            JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#007", "Erreur", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(dialog, "Erreur de lecture avec le matérielle", "Erreur #003", JOptionPane.ERROR_MESSAGE);
                             break;
 
                         case -4:
@@ -56,10 +56,11 @@ public class ControlMenu extends Controller implements ActionListener {
                     }
                 }
             } else {
-                JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle", "Erreur #004", JOptionPane.ERROR_MESSAGE);
             }
         } catch (UnsatisfiedLinkError e) {
-            JOptionPane.showMessageDialog(dialog, "Mauvaise configuration des libraires binaire\n#009", "Erreur", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(dialog, "Mauvaise configuration des libraires binaire", "Erreur #005", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -70,14 +71,11 @@ public class ControlMenu extends Controller implements ActionListener {
         switch (actionEvent.getActionCommand()) {
 
             case View.CODE_EXIT:
-
                 Sensors.getInstance().disconnect();
-
                 System.exit(0);
                 break;
 
             case View.CODE_CREDIT:
-
                 JOptionPane.showMessageDialog(dialog, "Programme réalisé par :\nGuillaume LAROYENNE\nle 13/07/2018", "Credit", JOptionPane.INFORMATION_MESSAGE);
                 break;
 
@@ -93,9 +91,7 @@ public class ControlMenu extends Controller implements ActionListener {
                 break;
 
             case View.CODE_CONNEXION:
-
                 connection();
-
                 break;
 
             default:

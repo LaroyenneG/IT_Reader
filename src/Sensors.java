@@ -9,6 +9,10 @@ import java.util.List;
 
 public class Sensors {
 
+    private static final int TIME_OUT = 2000;
+    private static final int DATA_RATE = 9600;
+
+
     public static final double INVALID_VALUE = -100.0;
 
     private static Sensors instance = null;
@@ -77,13 +81,13 @@ public class Sensors {
 
             portID = CommPortIdentifier.getPortIdentifier(portName);
 
-            Object object = portID.open("scale", 2000);
+            Object object = portID.open("scale", TIME_OUT);
 
             if (object instanceof SerialPort) {
 
-                serialPort = (SerialPort) portID.open("scale", 2000);
+                serialPort = (SerialPort) object;
 
-                serialPort.setSerialPortParams(1200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
                 input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
@@ -94,8 +98,10 @@ public class Sensors {
             }
 
         } catch (UnsupportedCommOperationException | IOException | NoSuchPortException e) {
+            e.printStackTrace();
             return -3;
         } catch (PortInUseException e) {
+            e.printStackTrace();
             return -4;
         }
 
@@ -120,6 +126,7 @@ public class Sensors {
             System.out.println(data);
 
         } catch (IOException e) {
+            e.printStackTrace();
             return INVALID_VALUE;
         }
 
@@ -149,5 +156,10 @@ public class Sensors {
 
     public boolean isConnect() {
         return connect;
+    }
+
+    public String getPortName() {
+
+        return portName;
     }
 }

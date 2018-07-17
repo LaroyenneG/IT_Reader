@@ -28,17 +28,21 @@ public class ThreadReadSensors extends Thread {
 
             double[] measure = new double[Model.SIZE];
 
+            boolean correct = true;
+
             for (int i = 0; i < measure.length; i++) {
 
+                measure[i] = sensors.readValue();
+
                 if (sensors.readValue() == Sensors.INVALID_VALUE) {
-                    sensors.disconnect();
+                    correct = false;
                     break;
                 }
-
-                measure[i] = sensors.readValue();
             }
 
-            model.setNewMeasures(measure);
+            if (correct) {
+                model.setNewMeasures(measure);
+            }
 
             try {
 
@@ -55,8 +59,10 @@ public class ThreadReadSensors extends Thread {
                 Thread.sleep(2000);
 
             } catch (NoMeasureException e) {
-                e.printStackTrace();
+                model.reset();
+                controller.errorReading(sensors.getPortName());
             } catch (InterruptedException e) {
+                e.printStackTrace();
                 interrupt();
             }
         }

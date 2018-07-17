@@ -27,7 +27,7 @@ public class Model {
     }
 
 
-    private synchronized void reset() {
+    public synchronized void reset() {
         cursor = 0;
     }
 
