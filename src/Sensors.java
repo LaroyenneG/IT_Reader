@@ -9,6 +9,8 @@ import java.util.List;
 
 public class Sensors {
 
+    public static final double INVALID_VALUE = -100.0;
+
     private static Sensors instance = null;
 
     private SerialPort serialPort;
@@ -118,7 +120,7 @@ public class Sensors {
             System.out.println(data);
 
         } catch (IOException e) {
-            return 0.0;
+            return INVALID_VALUE;
         }
 
         return Math.random() * 1000;
@@ -127,12 +129,13 @@ public class Sensors {
     public void setConnect(boolean b) {
 
         connect = b;
+
         if (connect) {
             notifyAll();
         }
     }
 
-    public void close() {
+    public void disconnect() {
 
         if (input != null) {
             try {

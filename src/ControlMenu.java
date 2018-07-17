@@ -22,8 +22,8 @@ public class ControlMenu extends Controller implements ActionListener {
 
             if (values != null && values.length > 1) {
 
-                String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
-                        null, values, "Titan");
+                String result = (String) JOptionPane.showInputDialog(dialog, "Choisez un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
+                        null, values, "");
 
                 if (result != null) {
 
@@ -71,7 +71,7 @@ public class ControlMenu extends Controller implements ActionListener {
 
             case View.CODE_EXIT:
 
-                Sensors.getInstance().close();
+                Sensors.getInstance().disconnect();
 
                 System.exit(0);
                 break;

@@ -29,27 +29,33 @@ public class ThreadReadSensors extends Thread {
             double[] measure = new double[Model.SIZE];
 
             for (int i = 0; i < measure.length; i++) {
+
+                if (sensors.readValue() == Sensors.INVALID_VALUE) {
+                    sensors.disconnect();
+                    break;
+                }
+
                 measure[i] = sensors.readValue();
             }
 
             model.setNewMeasures(measure);
 
             try {
+
                 model.compute();
+
                 view.displayMeasure(model.getMeasure());
+
+                if (view.autoValue()) {
+                    controller.sendToClipboard();
+                } else {
+                    controller.checkClipBoard(model.getMeasure());
+                }
+
+                Thread.sleep(2000);
+
             } catch (NoMeasureException e) {
                 e.printStackTrace();
-            }
-
-            if (view.autoValue()) {
-                controller.sendToClipboard();
-            } else {
-                controller.checkClipBoard(model.getMeasure());
-            }
-
-
-            try {
-                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 interrupt();
             }
