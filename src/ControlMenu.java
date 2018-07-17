@@ -14,47 +14,52 @@ public class ControlMenu extends Controller implements ActionListener {
     }
 
     private void connection() {
-        Sensors sensors = Sensors.getInstance();
 
-        String[] values = sensors.listPortIdentifiers();
+        try {
+            Sensors sensors = Sensors.getInstance();
 
-        if (values != null && values.length > 1) {
+            String[] values = sensors.listPortIdentifiers();
 
-            String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
-                    null, values, "Titan");
+            if (values != null && values.length > 1) {
 
-            if (result != null) {
+                String result = (String) JOptionPane.showInputDialog(dialog, "Choisir un port : ", "Connexion", JOptionPane.QUESTION_MESSAGE,
+                        null, values, "Titan");
 
-                sensors.setPortName(result);
+                if (result != null) {
 
-                switch (sensors.connect()) {
+                    sensors.setPortName(result);
 
-                    case 0:
-                        JOptionPane.showMessageDialog(dialog, "Connection réalisé", "OK", JOptionPane.INFORMATION_MESSAGE);
-                        break;
+                    switch (sensors.connect()) {
 
-                    case -1:
-                        JOptionPane.showMessageDialog(dialog, "Déjà connecté", "Attention", JOptionPane.WARNING_MESSAGE);
-                        break;
+                        case 0:
+                            JOptionPane.showMessageDialog(dialog, "Connection réalisé", "OK", JOptionPane.INFORMATION_MESSAGE);
+                            break;
 
-                    case -2:
-                        JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur", JOptionPane.ERROR_MESSAGE);
-                        break;
+                        case -1:
+                            JOptionPane.showMessageDialog(dialog, "Déjà connecté", "Attention", JOptionPane.WARNING_MESSAGE);
+                            break;
 
-                    case -3:
-                        JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#007", "Erreur", JOptionPane.ERROR_MESSAGE);
-                        break;
+                        case -2:
+                            JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur", JOptionPane.ERROR_MESSAGE);
+                            break;
 
-                    case -4:
-                        JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
-                        break;
+                        case -3:
+                            JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#007", "Erreur", JOptionPane.ERROR_MESSAGE);
+                            break;
 
-                    default:
-                        break;
+                        case -4:
+                            JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(dialog, "Erreur de configuration matérielle\n#001", "Erreur", JOptionPane.ERROR_MESSAGE);
+        } catch (UnsatisfiedLinkError e) {
+            JOptionPane.showMessageDialog(dialog, "Mauvaise configuration des libraires binaire\n#009", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
