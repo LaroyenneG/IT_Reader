@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Sensors {
 
-    private static final int TIME_OUT = 2000;
-    private static final int DATA_RATE = 9600;
+    private static final int TIME_OUT = 3000;
+    private static final int BAUD_RATE = 9600;
 
     public static final double INVALID_VALUE = -100.0;
 
@@ -91,7 +91,7 @@ public class Sensors {
 
                 serialPort = (SerialPort) object;
 
-                serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(BAUD_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_NONE);
 
                 output = serialPort.getOutputStream();
                 input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
