@@ -3,15 +3,16 @@ import gnu.io.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
 
 public class Sensors {
 
     private static final int TIME_OUT = 2000;
     private static final int DATA_RATE = 9600;
-
 
     public static final double INVALID_VALUE = -100.0;
 
@@ -21,6 +22,7 @@ public class Sensors {
     private String portName;
     private CommPortIdentifier portID;
     private BufferedReader input;
+    private OutputStream output;
 
     private boolean connect;
 
@@ -30,6 +32,7 @@ public class Sensors {
         serialPort = null;
         portID = null;
         input = null;
+        output = null;
         connect = false;
     }
 
@@ -73,6 +76,7 @@ public class Sensors {
 
     public synchronized int connect() {
 
+
         if (connect) {
             return -1;
         }
@@ -89,6 +93,7 @@ public class Sensors {
 
                 serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
+                output = serialPort.getOutputStream();
                 input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
                 setConnect(true);
@@ -123,11 +128,14 @@ public class Sensors {
 
             System.out.println("===========================================================");
 
-            String data = input.readLine();
+            output.write('R');
+            output.write('M');
+            output.flush();
 
-            System.out.println(data);
-
+            System.out.println(serialPort);
             System.out.println(input);
+
+            System.out.println(input.read());
 
 
             System.out.println("===========================================================");
@@ -135,10 +143,12 @@ public class Sensors {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return INVALID_VALUE;
+            return 0.0;
         }
 
-        return Math.random() * 1000;
+        System.exit(0);
+
+        return 0.0;
     }
 
     public void setConnect(boolean b) {
@@ -152,10 +162,11 @@ public class Sensors {
 
     public void disconnect() {
 
-        if (input != null && serialPort != null) {
+        if (input != null && output != null) {
             connect = false;
             try {
                 input.close();
+                output.close();
                 serialPort.close();
             } catch (IOException e) {
                 e.printStackTrace();
