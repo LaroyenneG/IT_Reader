@@ -14,8 +14,8 @@ import java.util.List;
 
 public class Sensors {
 
-    private static final int TIME_OUT = 3000;
-    private static final int BAUD_RATE = 9600;
+    public static final int TIME_OUT = 3000;
+    public static final int BAUD_RATE = 9600;
     public static final char[] SCALE_MESSAGE_WEIGHT = {'R', 'M'};
     public static final double UNITY_CONVERTER = 1.0;
 
