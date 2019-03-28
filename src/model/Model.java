@@ -1,3 +1,5 @@
+package model;
+
 public class Model {
 
     public static final int SIZE = 1000;
@@ -21,8 +23,8 @@ public class Model {
 
     public synchronized void setNewMeasures(double[] measures) {
 
-        for (int i = 0; i < measures.length; i++) {
-            setNewMeasure(measures[i]);
+        for (double v : measures) {
+            setNewMeasure(v);
         }
     }
 
@@ -37,9 +39,8 @@ public class Model {
 
     public synchronized void compute() throws NoMeasureException {
 
-
         if (cursor <= 0) {
-            throw new NoMeasureException("Any measure in memory");
+            throw new NoMeasureException("No measure in memory");
         }
 
         double m = 0;

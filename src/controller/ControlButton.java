@@ -1,3 +1,8 @@
+package controller;
+
+import model.Model;
+import view.View;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

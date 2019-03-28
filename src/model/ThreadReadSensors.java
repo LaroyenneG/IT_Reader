@@ -1,13 +1,18 @@
+package model;
+
+import controller.Controller;
+import view.View;
+
 public class ThreadReadSensors extends Thread {
+
+    public static final int THREAD_CLOCK = 2000;
 
     private Model model;
     private View view;
     private Controller controller;
 
     public ThreadReadSensors(Model model, View view, Controller controller) {
-
         super();
-
         this.model = model;
         this.view = view;
         this.controller = controller;
@@ -45,7 +50,6 @@ public class ThreadReadSensors extends Thread {
             }
 
             try {
-
                 model.compute();
 
                 view.displayMeasure(model.getMeasure());
@@ -56,11 +60,12 @@ public class ThreadReadSensors extends Thread {
                     controller.checkClipBoard(model.getMeasure());
                 }
 
-                Thread.sleep(2000);
+                Thread.sleep(THREAD_CLOCK);
 
             } catch (NoMeasureException e) {
                 model.reset();
                 controller.errorReading(sensors.getPortName());
+                e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 interrupt();

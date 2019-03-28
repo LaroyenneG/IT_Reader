@@ -1,3 +1,8 @@
+import controller.ControlGroup;
+import model.Model;
+import model.Sensors;
+import view.View;
+
 import javax.swing.*;
 
 public class App {
@@ -11,6 +16,8 @@ public class App {
                 View view = new View();
 
                 ControlGroup controlGroup = new ControlGroup(model, view);
+
+                Sensors.getInstance().enableDebug();
 
                 view.lock();
                 view.askControl();

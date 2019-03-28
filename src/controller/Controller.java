@@ -1,3 +1,9 @@
+package controller;
+
+import model.Model;
+import model.Sensors;
+import view.View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -14,7 +20,6 @@ public abstract class Controller {
     View view;
 
     public Controller(Model model, View view) {
-
         this.model = model;
         this.view = view;
     }
@@ -25,15 +30,15 @@ public abstract class Controller {
         Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 
         DataFlavor flavor = DataFlavor.stringFlavor;
+
         if (transferable.isDataFlavorSupported(flavor)) {
 
-
-            String text = null;
+            String text = "";
 
             try {
                 text = (String) transferable.getTransferData(flavor);
-            } catch (UnsupportedFlavorException | IOException ignored) {
-                text = "0";
+            } catch (UnsupportedFlavorException | IOException e) {
+                e.printStackTrace();
             }
 
             double value;
@@ -43,7 +48,6 @@ public abstract class Controller {
                 e.printStackTrace();
                 value = 0.0;
             }
-
 
             if (Math.abs((measure - value) / value) * 100.0 > DIF_LEVEL_WARNING) {
                 view.changeRed();
@@ -57,6 +61,7 @@ public abstract class Controller {
 
 
     public void sendToClipboard() {
+
         StringSelection selection = new StringSelection(String.valueOf(model.getMeasure()));
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }

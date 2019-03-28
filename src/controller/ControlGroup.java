@@ -1,3 +1,8 @@
+package controller;
+
+import model.Model;
+import view.View;
+
 public class ControlGroup {
 
     private ControlButton controlButtom;
@@ -7,7 +12,6 @@ public class ControlGroup {
 
 
     public ControlGroup(Model model, View view) {
-
         controlMenu = new ControlMenu(model, view);
         controlButtom = new ControlButton(model, view);
         controlCheckBox = new ControlCheckBox(model, view);

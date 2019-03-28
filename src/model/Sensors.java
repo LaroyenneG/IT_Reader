@@ -1,3 +1,5 @@
+package model;
+
 import gnu.io.*;
 
 import java.io.BufferedReader;
@@ -5,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -13,11 +16,18 @@ public class Sensors {
 
     private static final int TIME_OUT = 3000;
     private static final int BAUD_RATE = 9600;
+    public static final char[] SCALE_MESSAGE_WEIGHT = {'R', 'M'};
+    public static final double UNITY_CONVERTER = 1.0;
 
-    public static final double INVALID_VALUE = -100.0;
+    public static final double INVALID_VALUE = -Double.MAX_VALUE;
+
+    public static final int CONNECTED_ERROR = -1;
+    public static final int PORT_ERROR = -2;
+    public static final int COMMUNICATION_ERROR = -3;
+    public static final int USE_ERROR = -4;
+    public static final int GOOD_STATE = 0;
 
     private static Sensors instance = null;
-
     private SerialPort serialPort;
     private String portName;
     private CommPortIdentifier portID;
@@ -26,14 +36,16 @@ public class Sensors {
 
     private boolean connect;
 
-    private Sensors() {
+    private boolean debugMode;
 
+    private Sensors() {
         portName = "";
         serialPort = null;
         portID = null;
         input = null;
         output = null;
         connect = false;
+        debugMode = false;
     }
 
     public static Sensors getInstance() {
@@ -55,7 +67,6 @@ public class Sensors {
 
         if (!connect) {
 
-
             Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 
             List<String> list = new ArrayList<>();
@@ -76,13 +87,11 @@ public class Sensors {
 
     public synchronized int connect() {
 
-
         if (connect) {
-            return -1;
+            return CONNECTED_ERROR;
         }
 
         try {
-
             portID = CommPortIdentifier.getPortIdentifier(portName);
 
             Object object = portID.open("scale", TIME_OUT);
@@ -94,23 +103,24 @@ public class Sensors {
                 serialPort.setSerialPortParams(BAUD_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_NONE);
 
                 output = serialPort.getOutputStream();
+
                 input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
                 setConnect(true);
 
             } else {
-                return -2;
+                return PORT_ERROR;
             }
 
         } catch (UnsupportedCommOperationException | IOException | NoSuchPortException e) {
             e.printStackTrace();
-            return -3;
+            return COMMUNICATION_ERROR;
         } catch (PortInUseException e) {
             e.printStackTrace();
-            return -4;
+            return USE_ERROR;
         }
 
-        return 0;
+        return GOOD_STATE;
     }
 
     public synchronized void waitIsConnect() {
@@ -122,33 +132,39 @@ public class Sensors {
         }
     }
 
+    /*
+     * Scale communication
+     */
     public double readValue() {
 
+        double value = INVALID_VALUE;
+
         try {
+            for (char c : SCALE_MESSAGE_WEIGHT) {
+                output.write(c);
+            }
 
-            System.out.println("===========================================================");
-
-            output.write('R');
-            output.write('M');
             output.flush();
 
-            System.out.println(serialPort);
-            System.out.println(input);
+            if (debugMode) {
+                System.out.println("DEBUG  : Send Message : " + Arrays.toString(SCALE_MESSAGE_WEIGHT));
+                System.out.println("PORT : " + serialPort);
+            }
 
-            System.out.println(input.read());
+            String responseMessage = input.readLine();
 
+            if (debugMode) {
+                System.out.println("Answer : " + responseMessage);
+                System.out.println("===========================================================");
+            }
 
-            System.out.println("===========================================================");
+            value = Double.parseDouble(responseMessage) * UNITY_CONVERTER;
 
-
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
-            return 0.0;
         }
 
-        System.exit(0);
-
-        return 0.0;
+        return value;
     }
 
     public void setConnect(boolean b) {
@@ -163,7 +179,9 @@ public class Sensors {
     public void disconnect() {
 
         if (input != null && output != null) {
+
             connect = false;
+
             try {
                 input.close();
                 output.close();
@@ -179,7 +197,10 @@ public class Sensors {
     }
 
     public String getPortName() {
-
         return portName;
+    }
+
+    public void enableDebug() {
+        debugMode = true;
     }
 }

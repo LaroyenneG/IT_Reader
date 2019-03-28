@@ -1,3 +1,9 @@
+package controller;
+
+import model.Model;
+import model.ThreadReadSensors;
+import view.View;
+
 public class ControlSensors extends Controller {
 
     private ThreadReadSensors threadReadSensors;

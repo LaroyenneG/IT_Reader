@@ -1,13 +1,15 @@
+package controller;
+
+import model.Model;
+import view.View;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ControlCheckBox extends Controller implements ActionListener {
 
-
     public ControlCheckBox(Model model, View view) {
-
         super(model, view);
-
         view.setCheckBoxController(this);
     }
 

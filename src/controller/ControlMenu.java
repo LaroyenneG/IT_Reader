@@ -1,3 +1,9 @@
+package controller;
+
+import model.Model;
+import model.Sensors;
+import view.View;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,27 +37,29 @@ public class ControlMenu extends Controller implements ActionListener {
 
                     switch (sensors.connect()) {
 
-                        case 0:
+                        case Sensors.GOOD_STATE:
                             JOptionPane.showMessageDialog(dialog, "Connection réalisé", "OK", JOptionPane.INFORMATION_MESSAGE);
                             break;
 
-                        case -1:
+                        case Sensors.CONNECTED_ERROR:
                             JOptionPane.showMessageDialog(dialog, "Déjà connecté", "Attention", JOptionPane.WARNING_MESSAGE);
                             break;
 
-                        case -2:
+                        case Sensors.PORT_ERROR:
                             JOptionPane.showMessageDialog(dialog, "Port de communication invalide", "Erreur #002", JOptionPane.ERROR_MESSAGE);
                             break;
 
-                        case -3:
+                        case Sensors.COMMUNICATION_ERROR:
                             JOptionPane.showMessageDialog(dialog, "Erreur de lecture avec le matérielle", "Erreur #003", JOptionPane.ERROR_MESSAGE);
                             break;
 
-                        case -4:
+                        case Sensors.USE_ERROR:
                             JOptionPane.showMessageDialog(dialog, "Le port est déjà utilisé\n#002", "Erreur", JOptionPane.ERROR_MESSAGE);
                             break;
 
                         default:
+                            System.err.println("Invalid state");
+                            System.exit(-1);
                             break;
                     }
                 }
@@ -95,8 +103,8 @@ public class ControlMenu extends Controller implements ActionListener {
                 break;
 
             default:
-                System.exit(-3);
+                System.err.println("Invalid state");
+                System.exit(-1);
         }
-
     }
 }
